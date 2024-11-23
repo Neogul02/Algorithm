@@ -1,11 +1,6 @@
 N = int(input())
-arr = []
-
-for _ in range(N):
-    arr.append(input())
-arr = list(set(arr))
-
-arr.sort()
+arr = [input() for _ in range(N)]
+arr = sorted(set(arr))
 arr.sort(key=len)
 
 for i in arr:
