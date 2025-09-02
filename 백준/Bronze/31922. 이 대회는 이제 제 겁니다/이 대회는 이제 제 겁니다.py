@@ -1,3 +1,2 @@
-A,P,C = map(int, input().split())
-if A+C < P : print(P)
-else: print(A+C)
+A, P, C = map(int, input().split())
+print(P if A + C < P else A + C)
