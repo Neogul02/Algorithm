@@ -1,3 +1,5 @@
-import math
 N = int(input())
-print(math.factorial(N) // (7 * 24 * 60 * 60))
+fac = 1
+for i in range(1, N + 1):
+    fac *= i
+print(fac//(60*60*24*7))
