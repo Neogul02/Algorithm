@@ -1,14 +1,7 @@
-# 5! = 5 * 4 * 3 * 2 * 1 = 5 * 4!
-# 4! = 4 * 3 * 2 * 1 = 4 * 3!
-# 3! = 3 * 2 * 1 = 3 * 2!
-# 2! = 2 * 1 = 2 * 1!
-# 1! = 1 * 0!
-# 0! = 1
-
-# N! = N * (N-1)!
-
-def factorial(n):
-    if n == 0:
-        return 1
-    else:
-        return n * factorial(n - 1)
+python
+N = int(input())
+cnt = 0
+for i in range(1, N + 1):
+    s = str(i)
+    cnt += s.count('3') + s.count('6') + s.count('9')
+print(cnt)
