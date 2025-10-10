@@ -2,11 +2,19 @@ N = int(input())
 M = int(input())
 S = input()
 
-ioi = 'IO' * N + 'I'
-
 cnt = 0
-for i in range(M):
-    tmp = S[i:i+2*N+1]
-    if tmp == ioi:
-        cnt += 1
-print(cnt)
+i = 0
+pattern = 0
+
+while i < M - 1:
+    if S[i:i+3] == 'IOI':
+        pattern += 1
+        if pattern == N:
+            cnt += 1
+            pattern -= 1
+        i += 2
+    else:
+        pattern = 0
+        i += 1
+
+print(cnt, end='')
