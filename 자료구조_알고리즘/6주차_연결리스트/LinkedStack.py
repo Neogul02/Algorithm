@@ -17,13 +17,13 @@ class LinkedStack:
         return self._size == 0
 
     def push(self, e):
-        self._head = self._Node(e, self._head)
+        self._head = self._Node(e, self._head) # 새로운 노드를 생성하여 스택의 맨 위에 추가
         self._size += 1
 
     def top(self):
         if self.is_empty():
             raise Exception("Stack is empty")
-        return self._head._element
+        return self._head._element # 스택의 맨 위 원소 반환
 
     def pop(self):
         if self.is_empty():

@@ -7,12 +7,10 @@ def is_multiple(n, m):
     else:
         return False
 
-# 1-2
+# 1-2 n곱셈 모듈러 나눗셈 연산없이 짝수 홀수를 반환하는 함수
 def is_even(n):
-    if n % 2 == 0:
-        return True
-    else:
-        return False
+
+
 
 # 1-3 : 시퀀스를 받아 최솟값과 최댓값을 튜플로 반환 no use of min() and max()
 def minmax(data):

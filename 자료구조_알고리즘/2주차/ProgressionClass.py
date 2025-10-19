@@ -70,3 +70,23 @@ if __name__ == '__main__':
     p2.print_progression(10)
     p3.print_progression(10)
     p4.print_progression(10)
+
+    # --- 연습문제
+    # 2,2 fiobonacci
+    p5 = FibonacciProgression(2, 2)
+    print(f'2,2 Fibonacci:')
+    p5.print_progression(8)
+
+    # 0, 128, how many steps to < 2^63
+    p6 = FibonacciProgression(0, 128)
+    count = 0
+    for x in p6:
+        if x < 2**63:
+            count += 1
+        else:
+            count += 1
+            break
+
+    print(f'0,128 Fibonacci가 2^63보다 크게 될때 나오는 next 횟수: {count}')
+
+

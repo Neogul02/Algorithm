@@ -1,6 +1,5 @@
 def binary_search(data, target, low, high):
-    """
-
+    """ 이진 탐색 알고리즘
     :param data: 찾을 리스트
     :param target: 찾을 값
     :param low: 최소 위치 인덱스

@@ -37,6 +37,36 @@ class _DoublyLinkedBase:
         node._prev = node._next = node._element = None # 노드의 참조를 끊어줌(가비지 컬렉션)
         return element
 
+
+class LinkedDeque(_DoublyLinkedBase):
+
+    def first(self):
+        if self.is_empty():
+            raise Exception("Deque is empty")
+        return self._header._next._element
+
+    def last(self):
+        if self.is_empty():
+            raise Exception("Deque is empty")
+        return self._trailer._prev._element
+
+    def insert_first(self, e):
+        self._insert_between(e, self._header, self._header._next)
+
+    def insert_last(self, e):
+        self._insert_between(e, self._trailer._prev, self._trailer)
+
+    def delete_first(self):
+        if self.is_empty():
+            raise Exception("Deque is empty")
+        return self._delete_node(self._header._next)
+
+    def delete_last(self):
+        if self.is_empty():
+            raise Exception("Deque is empty")
+        return self._delete_node(self._trailer._prev)
+
+
 if __name__ == "__main__":
     dll = _DoublyLinkedBase()
     print(dll.is_empty())

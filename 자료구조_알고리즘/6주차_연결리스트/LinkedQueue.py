@@ -40,6 +40,15 @@ class LinkedQueue:
         self._tail = newest
         self._size += 1
 
+    def rotate(self):
+        if self.is_empty():
+            raise Exception("Queue is empty")
+        oldhead = self._head
+        self._head = self._head._next
+        self._tail._next = oldhead
+        oldhead._next = None
+        self._tail = oldhead
+
 if __name__ == "__main__":
 
     lq = LinkedQueue()

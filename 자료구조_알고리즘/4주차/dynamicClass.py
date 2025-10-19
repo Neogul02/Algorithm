@@ -32,7 +32,6 @@ class DynamicArray:
 
 if __name__ == "__main__":
     arr = DynamicArray()
-    arr.make_array(5)
     for i in range(10):
         arr.append(i)
         print(f"Length: {len(arr)}, Capacity: {arr.capacity}, Elements: {[arr[j] for j in range(len(arr))]}")
