@@ -1,48 +1,26 @@
-import java.util.Arrays;
+import java.util.HashMap;
 
 class Solution {
-    public int[] solution(int N, int[] stages) {
-        double[] failPercent = new double[N];
+    public static int[] solution(int N, int[] stages) {
 
-        int [] players = new int[N];
-        int [] noClearPlayers = new int[N];
+        int [] challenger = new int[N + 2];
+        for(int stage: stages){
+            challenger[stage]++;
+        }
+        HashMap<Integer, Double> fails = new HashMap<>();
+        double total = stages.length;
 
-        for(int i=0; i<N; i++){
-            int player = 0;
-            int noClearPlayer=0;
-            for(int j=0; j<stages.length; j++){
-                if(stages[j]>i){
-                    // 해당 스테이지를 도전한 사람 수
-                    player++;
-                    if(stages[j]<=i+1){
-                        // 해당 스테이지를 도전했는데, 클리어는 못한 사람 수
-                        noClearPlayer++;
-                    }
-                }
-                players[i] = player;
-                noClearPlayers[i] = noClearPlayer;
-                if(noClearPlayer == 0 ){
-                    failPercent[i] = 0;
-                }else{
-                    failPercent[i] = (double) noClearPlayer /player;
-                }
+        for(int i = 1; i <= N; i++) {
+            if(challenger[i] == 0) {
+                fails.put(i, 0.0);
+            } else {
+                fails.put(i, challenger[i] / total);
+                total -= challenger[i];
             }
         }
-        int [] result = new int[N];
-//        System.out.println(Arrays.toString(players));
-//        System.out.println(Arrays.toString(noClearPlayers));
-//        System.out.println(Arrays.toString(failPercent));
-        for(int i =0; i<N; i++){
-            double max = Arrays.stream(failPercent).max().getAsDouble();
-            for(int j=0; j<N; j++){
-                if(failPercent[j]==max){
-                    result[i] = j+1;
-                    failPercent[j] = -1;
-                    break;
-                }
-            }
-        }
-        System.out.println(Arrays.toString(result));
-        return result;
+        return fails.entrySet().stream()
+            .sorted((a, b) -> Double.compare(b.getValue(), a.getValue()))
+            .mapToInt(e -> e.getKey())
+            .toArray();
     }
 }
