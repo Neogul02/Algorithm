@@ -7,54 +7,57 @@ import java.util.StringTokenizer;
 
 /**
  * 10번 루프 안에서 동작 ->
- * 1. 테스트 케이스 번호 입력받기 : int T
- * 2. 8개의 숫자를 입력받아 Deque에 넣어두기 : numQ 
- * 3. 사이클 안에서 1부터 5까지 굴리기
- * 4. 출력하기
+ * 1. Main에서는 테스트 케이스 번호 입력받기 : int T
+ * 2. 8개의 숫자를 입력받아 static Deque에 넣어두기 : deque
+ * 3. Solution으로 로직 분리,사이클 안에서 1부터 5까지 굴리기 덱의 앞에서부터  뽑기
+ * 	3-1. 만약 무한루프안에서 마지막 원소가 0보다 작거나 같으면 루프 탈출
+ * 4. StringBuilder sb 에 append 해둔 문자열 출력
  */ 
 public class Solution {
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        
-        // 10개의 테스트 케이스 루프
-        for (int i = 0; i < 10; i++) {
-            String line = br.readLine().trim();
-            if (line == null) break; // 입력이 끝났을 경우 대비
-            
-            int T = Integer.parseInt(line);
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            
-            Deque<Integer> numQ = new ArrayDeque<>();
-            // 2. 8개의 숫자를 Deque에 넣기
-            for (int j = 0; j < 8; j++) {
-                numQ.addLast(Integer.parseInt(st.nextToken()));
-            }
-            
-            // 3. 암호 생성 로직
-            boolean isFinished = false;
-            while (!isFinished) {
-                // 한 사이클: 1부터 5까지 순환
-                for (int d = 1; d <= 5; d++) {
-                    int first = numQ.pollFirst() - d;
-                    
-                    if (first <= 0) {
-                        first = 0;
-                        numQ.addLast(first);
-                        isFinished = true;
-                        break;
-                    }
-                    numQ.addLast(first);
-                }
-            }
-            
-            sb.append("#").append(T).append(" ");
-            for (int num : numQ) {
-                sb.append(num).append(" ");
-            }
-            sb.append("\n");
-        }
-        System.out.print(sb.toString());
-    }
+	static BufferedReader br;
+	static StringTokenizer st;
+	static StringBuilder sb;
+	static Deque<Integer> deque = new ArrayDeque<>();
 	
+	public static void main(String[] args) throws IOException {
+		br = new BufferedReader(new InputStreamReader(System.in));
+		sb = new StringBuilder();
+		
+		for(int tc=1; tc<=10; tc++) {
+			br.readLine().trim();
+			st = new StringTokenizer(br.readLine().trim());
+			
+			
+			for(int cnt=0; cnt<8; cnt++) {
+				deque.add(Integer.parseInt(st.nextToken()));
+			}
+			sb.append("#"+tc+" ");
+			Solution();
+			deque.clear();
+			
+		}
+		
+		System.out.println(sb);
+		
+	}
+	public static void Solution() {
+		boolean isPasswordOk = true;
+		while(isPasswordOk) {
+			for(int i=1; i<=5; i++) {
+				Integer temp = deque.poll();
+				deque.add(temp-i);
+				
+				if(deque.getLast()<=0) {
+					deque.pollLast();
+					deque.add(0);
+					isPasswordOk = false;
+					break;
+				}
+			}
+		}
+		for(int j=0; j<8; j++) {
+			sb.append(deque.poll()+" ");
+		}
+		sb.append("\n");	
+	}
 }
