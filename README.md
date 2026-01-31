@@ -1,2 +1,2 @@
 # Algorithm
-Coding Test Algorithm, BOJ, Programmers.
+Algorithm practice repository for SWEA, BOJ, Programmers.
