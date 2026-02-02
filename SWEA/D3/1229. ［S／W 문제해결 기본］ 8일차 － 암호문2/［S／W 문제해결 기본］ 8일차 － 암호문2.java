@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
@@ -28,7 +28,7 @@ public class Solution {
 		sb = new StringBuilder();
 		
 		for(int tc=1; tc<=10; tc++) {
-			LinkedList<String> list = new LinkedList<>(); // testCase 마다 초기화
+			ArrayList<String> list = new ArrayList<>(); // testCase 마다 초기화
 			
 			int N = Integer.parseInt(br.readLine().trim()); // 첫 번째 줄: 원본 암호문의 길이
 			
@@ -49,14 +49,14 @@ public class Solution {
 					st = new StringTokenizer(str.trim());
 				}
                 // (1) 명령어 종류 읽기 ('I')
-                String cmd = st.nextToken();
+                char cmd = st.nextToken().charAt(0);
                 // (2) 앞에서부터 몇 번째 위치인지 (x)
                 int startIdx = Integer.parseInt(st.nextToken());
 
 	            // (3) 몇 개를 넣을 건지 (y)
 	            int count = Integer.parseInt(st.nextToken());
                 
-                if(cmd.equals("I")) {
+                if(cmd=='I') {
                     // (4) y개만큼 반복해서 넣기
                     for (int j = 0; j < count; j++) {
                         list.add(startIdx++, st.nextToken());
