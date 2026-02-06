@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
  * [출력]
  * 5. 제한 칼로리 이하의 조합 중 최고의 맛 점수를 출력한다.
  */
+// 조합으로 푼 버전
 public class Solution {
 
     static BufferedReader br;
@@ -28,7 +29,8 @@ public class Solution {
 
     static int N, L;
     static int[] score, cal;
-    // score : [100, 300, 250, 500, 400], cal :[200, 500, 300, 1000, 400]
+    // score : [100, 300, 250, 500, 400]
+    // cal :[200, 500, 300, 1000, 400]
     static int maxScore;
 
     public static void main(String[] args) throws IOException {
@@ -42,7 +44,9 @@ public class Solution {
 
             // 초기화
             maxScore = 0;
-            findSubset(0, 0, 0);
+            for (int r = 1; r <= N; r++) {
+                findCombination(0, 0, r, 0, 0);
+            }
 
             sb.append(String.format("#%d %d\n", tc, maxScore));
         }
@@ -67,21 +71,19 @@ public class Solution {
             }
     }
 
-    public static void findSubset(int index, int currentScore, int currentCal) {
-        // 기저조건: 모든 재료를 확인했을 때
-        if(index == N) {
-            // 4-2. 모든 부분집합(2^N개)을 확인하여 제한 칼로리 이하인 조합을 찾는다.
-            if(currentCal <= L) {
-                maxScore = Math.max(maxScore, currentScore);
-            }
+    public static void findCombination(int cnt, int start, int targetR, int currentScore, int currentCal) {
+        // 1. 가지치기: 이미 칼로리 넘었으면 더 볼 필요 없음 (효율성 증가)
+        if (currentCal > L) return;
+
+        // 2. 기저조건: 목표한 개수(targetR)만큼 다 뽑았을 때
+        if (cnt == targetR) {
+            maxScore = Math.max(maxScore, currentScore);
             return;
         }
 
-        // 4-1. 각 재료마다 "선택" 또는 "미선택" 두 가지 경우를 재귀적으로 탐색한다.
-        // 현재 재료를 선택하는 경우
-        findSubset(index + 1, currentScore + score[index], currentCal + cal[index]);
-
-        // 현재 재료를 선택하지 않는 경우
-        findSubset(index + 1, currentScore, currentCal);
+        for (int i = start; i < N; i++) {
+            // i번째 재료를 뽑고 다음 재귀로 (i+1을 전달해서 중복 방지)
+            findCombination(cnt + 1, i + 1, targetR, currentScore + score[i], currentCal + cal[i]);
+        }
     }
 }
