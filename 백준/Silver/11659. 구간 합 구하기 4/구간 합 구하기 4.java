@@ -1,0 +1,50 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+/**
+ * 11659. 구간합4
+ * @author neogul02
+ * 
+ * 1. 사용자에게 수의 개수 N과 M을 입력받는다.
+ * 2. 숫자 N개를 입력받아 저장해둔다.
+ * 3. N 길이보다 1칸 더 크게 누적합을 저장해 둘 배열 sumArr를 저장해두고 누적합을 계산해서 저장한다.
+ * 4. i와 j 구간을 입력받아 누적합 배열 j인덱스에서 i인덱스를 빼면 i~j 사이의 합이 나올것이다.
+ * 
+ */
+public class Main {
+    static StringTokenizer st;
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		
+		// 1. 사용자에게 수의 개수 N과 M을 입력받는다.
+		st = new StringTokenizer(br.readLine().trim(), " ");
+		int N = Integer.parseInt(st.nextToken()); // 수의 개수 N
+		int M = Integer.parseInt(st.nextToken()); // 합을 구해야 하는 횟수 M
+
+		st = new StringTokenizer(br.readLine().trim(), " ");
+		int[] numbersArr = new int[N];
+		
+		int[] sumArr = new int[N+1];
+		int sum = 0;
+		
+		// 2. 숫자 N개를 입력받아 저장해둔다.
+		for(int i=0; i<N; i++) {
+			numbersArr[i] = Integer.parseInt(st.nextToken());
+			// 3. N 길이보다 1칸 더 크게 누적합을 저장해 둘 배열 sumArr를 저장해두고 누적합을 계산해서 저장한다.
+			sum+= numbersArr[i];
+			sumArr[i+1] = sum;
+		}
+		
+		for(int m=0; m<M; m++) {
+			st = new StringTokenizer(br.readLine().trim(), " ");
+			// sumArr[3] 은 sumArr[1]~sumArr[3]까지의 합이니까 여기서 i-1번 인덱스를 빼면 합이 계산될것임 
+			int i = Integer.parseInt(st.nextToken())-1;
+			int j = Integer.parseInt(st.nextToken());
+			
+			sb.append(sumArr[j]-sumArr[i]).append("\n");
+		}
+		System.out.println(sb);
+	}
+}
