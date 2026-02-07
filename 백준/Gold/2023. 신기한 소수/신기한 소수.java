@@ -1,4 +1,5 @@
 import java.io.*;
+
 /**
  * 2023. 신기한 소수
  * @author neogul02
@@ -53,10 +54,10 @@ public class Main {
 	
 	// 3. 소수 판별 메서드 -> 받은 int형 정수가 소수인가?
 	public static boolean isPrime(int num) {
-		if (num < 2) return false;
+		if (num < 2) return false; // 0 이랑 1은 소수가 아님
 		
-		for (int i = 2; i * i <= num; i++) {
-			if (num % i == 0) return false; // 루트 num 이랑 같음
+		for (int i = 2; i <= Math.sqrt(num); i++) { // 루트 num 이랑 같음
+			if (num % i == 0) return false;
 		}
 		return true;
 	}
