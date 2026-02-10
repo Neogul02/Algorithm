@@ -14,7 +14,10 @@ import java.util.StringTokenizer;
  * 1. 입력 좌표 -1000~1000을 0~2000으로 이동 +1000 해서 최소를 0,0으로 잡기
  * 2. 0.5 단위 때문에 맵 좌표 스케일을 두배로 늘리기 -> 최종 좌표: 0~4000 범위 (모두 양수!)
  * 3. 입력을 받고 클래스화 해서 구조를 잡고 ArrayList에 원자들을 담아두기
- * 4. 시뮬레이션: 매 시간마다 원자 이동 -> 충돌 검사 -> 에너지 계산
+ * 
+ * -> 4. 시뮬레이션: 매 시간마다 원자 이동 -> 충돌 검사 -> 에너지 계산
+ * 
+ * 4000*N 
  */
 public class Solution {
     static class Atom {
@@ -89,7 +92,7 @@ public class Solution {
      */
     static int simulate(ArrayList<Atom> atoms) {
         int totalEnergy = 0;  // 총 방출 에너지
-        final int MAX_TIME = 4000;  // 최대 시뮬레이션 시간
+        final int MAX_TIME = 4000;  // 최대 시뮬레이션 시간 (맵 크기 기준)
         
         // 매 시간마다 시뮬레이션 진행
         for (int time = 0; time < MAX_TIME; time++) {
@@ -113,8 +116,9 @@ public class Solution {
                     a.y < 0 || a.y > 4000) {
                     continue;
                 }
-                // 위치별로 그룹화
-                int key = a.x * 5000 + a.y;
+                
+                // 위치별로 그룹화 (key 값을 해시??? 처리하면 시간초과
+                int key = (a.x << 12) | a.y;
                 positionMap.putIfAbsent(key, new ArrayList<>());
                 positionMap.get(key).add(a);
             }
@@ -132,7 +136,9 @@ public class Solution {
                     }
                 }
             }
+            
             atoms = survivors;
+            
         }
         return totalEnergy;
     }
