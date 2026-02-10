@@ -28,7 +28,8 @@ public class PermutationInputTest {
 		for(int i=0; i<N; i++) {
 			input[i] = sc.nextInt();
 		}
-		permutation(0);
+//		permutation(0);
+		permutation_bit(0, 0);
 		System.out.println("callCnt: "+callCnt);
 
 	}
@@ -50,6 +51,26 @@ public class PermutationInputTest {
 			permutation(depth+1);
 			
 			isSelected[i] = false; //
+		}
+		
+	}
+	
+	public static void permutation_bit(int depth, int flag) {
+		// 종료조건 - 기저조건
+		if(depth == R) {
+			++callCnt;
+			System.out.println(Arrays.toString(numbers));
+			return;
+		}
+		
+		// 실행부분
+		for(int i=0; i<N; i++) {
+			// 중복 체크
+			if((flag & (1<<i)) !=0 ) continue; // 비트가 1 hit 이면
+			numbers[depth] = input[i];
+			
+			permutation_bit(depth+1, flag | 1<<i);
+			
 		}
 		
 	}
