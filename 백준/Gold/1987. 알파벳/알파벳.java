@@ -9,8 +9,9 @@ import java.util.StringTokenizer;
  * @author neogul02
  * 
  * @main 
- * isvisited에 지금까지 다녀간 알파벳을 기억해두고 dfs로 맵 돌다가 가장 멀리 간 depth가 정답
- * (0,0) 에서 출발 -> 출발지점도 깊이 1로 생각해줘야 함
+ * visited에 지금까지 다녀간 알파벳을 기억해두고 dfs로 가장 멀리 간 depth가 정답
+ * (0,0) 에서 출발 
+ *
  */
 public class Main {
 
@@ -25,12 +26,12 @@ public class Main {
 
 	static int maxDepth = 1; // 최소 1 (시작위치 알파벳)
 	
-	static ArrayList<Character> visited = new ArrayList<>();
+	static boolean[] visited = new boolean[26]; // 알파벳 26자리 위치 확인
  	
 	public static void main(String[] args) throws IOException{
 		input();
-		visited.add(map[0][0]); // 시작위치 (0,0)의 알파벳을 방문처리
-		dfs(0,0);
+		visited[map[0][0]-'A'] = true; // 시작위치 (0,0)의 알파벳을 방문처리
+		dfs(0,0, 1);
 
 		System.out.print(maxDepth);
 	}
@@ -43,8 +44,8 @@ public class Main {
 	 * 5. 다음 위치로 이동 dfs(nr,nc)
 	 * 6. 이전 위치로 백트래킹, visited에 마지막으로 들어간 알파벳 이전으로 백, 다시 탐색
 	 */
-	private static void dfs(int r, int c) {
-		
+	private static void dfs(int r, int c, int depth) {
+		maxDepth = Math.max(maxDepth, depth); // 최대 깊이 갱신
 		for(int i=0; i<4; i++) {
 			int nr = r + dx[i];
 			int nc = c + dy[i];
@@ -52,15 +53,14 @@ public class Main {
 			if(nr>=0 && nr<R && nc>=0 && nc<C) { // 배열 아웃바운드 처리
 				
 				char nextChar = map[nr][nc];
+				int nextIdx = nextChar -'A';
 				
-				if(visited.contains(nextChar) != true) { // 방문한 적 없는 알파벳이면
-					visited.add(nextChar); // 방문 처리
+				if(visited[nextIdx] != true) { // 방문한 적 없는 알파벳이면
+					visited[nextIdx] = true; // 방문 처리
+	
+					dfs(nr, nc, depth+1); // 다음 위치로 이동
 					
-					maxDepth = Math.max(maxDepth, visited.size()); // 최대 깊이 갱신
-					
-					dfs(nr, nc); // 다음 위치로 이동
-					
-					visited.remove(visited.size()-1); // 가장 마지막에 탐색한 알파벳 백트래킹
+					visited[nextIdx] = false; // 가장 마지막에 탐색한 알파벳 백트래킹
 				}
 			}
 		}
