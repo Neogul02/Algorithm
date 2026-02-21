@@ -21,21 +21,28 @@ public class Solution {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringBuilder sb = new StringBuilder();
     static StringTokenizer st;
+
     static int N; // 맵 한 변의 길이
     static int[][] dessertMap;
     static int maxDessertCnt;
+
     static boolean[][] visited; // 방문 체크 배열
     static boolean[] eatenDessert; // 먹은 디저트 체크 배열
 
     // 방향벡터 : 대각선 + 사각형 모양으로 움직여야한다. 4방향
     static int[] dr = {1, 1, -1, -1}; // 우하, 좌하, 좌상, 우상
     static int[] dc = {1, -1, -1, 1};
+    
+    static int startR;
+    static int startC;
 
     public static void main(String[] args) throws IOException {
-        int T = Integer.parseInt(br.readLine().trim());
+        int T = Integer.parseInt(br.readLine());
+
         for (int tc = 1; tc <= T; tc++) {
             input();
             solve();
+
             sb.append('#').append(tc).append(' ')
               .append(maxDessertCnt).append('\n');
         }
@@ -52,24 +59,26 @@ public class Solution {
         maxDessertCnt = -1;
 
         // 1. 맵의 모든 위치를 시작점으로 시도해본다
-        // 가장자리는 dfs에서 아웃바운드 체크로 걸러짐
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        // 가장 자리 탐색 제거 버전
+        for (int i = 0; i < N-2; i++) {
+            for (int j = 1; j < N-1; j++) {
                 // 시뮬레이션마다 초기화
                 eatenDessert = new boolean[101]; // 디저트 종류 1~100 초기화
                 visited = new boolean[N][N]; // 방문 체크
 
+                startR = i; // 시작 위치 저장 R
+                startC = j; // 시작 위치 저장 C
+
                 // dfs(현재행, 현재열, 시작행, 시작열, 현재방향, 먹은디저트수)
                 // - 현재 위치: (i, j)
-                // - 시작 위치: (i, j) - 나중에 돌아올 곳
                 // - 방향: 0 (우하 방향부터 시작)
                 // - 먹은 디저트: 0개 (시작점은 아직 안 먹음)
-                dfs(i, j, i, j, 0, 0);
+                dfs(i, j, 0, 0);
             }
         }
     }
 
-    private static void dfs(int r, int c, int startR, int startC, int dir, int dessertCnt) {
+    private static void dfs(int r, int c, int dir, int dessertCnt) {
         // 기저 조건: 시작점으로 돌아왔는가?
         // 1. 현재 위치가 시작점과 같고
         // 2. 디저트를 먹은 상태여야 함 (dessertCnt > 0)
@@ -99,7 +108,7 @@ public class Solution {
             eatenDessert[dessertMap[nr][nc]] = true; // 먹은 디저트 번호 체크
 
             // 다음 탐색
-            dfs(nr, nc, startR, startC, i, dessertCnt + 1);
+            dfs(nr, nc, i, dessertCnt + 1);
 
             // 백트래킹 - 방문 처리 해제, 먹은 디저트 표시 해제
             // 이전 디저트가게로 가서 다른 방향으로 탐색할 수 있도록
@@ -109,10 +118,11 @@ public class Solution {
     }
 
     private static void input() throws IOException {
-        N = Integer.parseInt(br.readLine().trim());
+        N = Integer.parseInt(br.readLine());
         dessertMap = new int[N][N];
+
         for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine().trim());
+            st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
                 dessertMap[i][j] = Integer.parseInt(st.nextToken());
             }
