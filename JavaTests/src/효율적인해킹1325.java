@@ -44,7 +44,7 @@ public class 효율적인해킹1325 {
 		Queue<Integer> q = new ArrayDeque<Integer>();
 		boolean[] visited = new boolean[N+1];
 		
-		visited[startNode] = s;
+		visited[startNode] = true; // 시작노드 방문처리
 		q.add(startNode);
 		
 		
