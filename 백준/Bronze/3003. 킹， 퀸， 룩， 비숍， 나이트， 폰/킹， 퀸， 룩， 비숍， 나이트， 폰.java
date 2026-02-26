@@ -12,13 +12,7 @@ class Main {
         st = new StringTokenizer(br.readLine().trim(), " ");
         int[] rightPieces = { 1, 1, 2, 2, 2, 8 };
         for (int i = 0; i < 6; i++) {
-            int tempPiece = Integer.parseInt(st.nextToken());
-
-            if (tempPiece != rightPieces[i])
-                sb.append(rightPieces[i] - tempPiece).append(' ');   
-            
-            else
-                sb.append(0).append(' ');
+            sb.append(rightPieces[i] - Integer.parseInt(st.nextToken())).append(' ');   
         }
         System.out.print(sb);
     }
