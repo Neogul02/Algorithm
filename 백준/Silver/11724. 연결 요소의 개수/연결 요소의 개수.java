@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -42,7 +43,8 @@ class Main {
         graphCnt = 0; // 연결요소 개수
         for (int i = 1; i <= N; i++) { // 정점 1부터 N까지 반복
             if (visited[i] == false) { // 방문하지 않은 정점이 있다면
-                dfs(i); // dfs 탐색
+                // dfs(i);
+                bfs(i);
                 graphCnt++; // 연결 요소 개수 + 1
             }
         }
@@ -50,9 +52,26 @@ class Main {
 
     private static void dfs(int node) {
         visited[node] = true; // 현재 노드 방문 체크
-        for(int next : graph.get(node)){
-            if (visited[next] == true) continue; // 이미 방문한 노드라면 pass
+        for (int next : graph.get(node)) {
+            if (visited[next] == true)
+                continue; // 이미 방문한 노드라면 pass
             dfs(next); // 다음 노드로 dfs 탐색
+        }
+    }
+    
+    private static void bfs(int start) {
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        queue.add(start);
+        visited[start] = true; // 시작 노드 방문 체크
+
+        while (queue.isEmpty()==false) {
+            int node = queue.poll(); // 큐에서 노드 꺼내기
+            for (int next : graph.get(node)) { // 현재 노드의 인접 노드들 탐색
+                if (visited[next] == true)
+                    continue; // 이미 방문한 노드라면 pass
+                visited[next] = true; // 다음 노드 방문 체크
+                queue.add(next); // 다음 노드를 큐에 추가
+            }
         }
     }
     
@@ -75,6 +94,7 @@ class Main {
             graph.get(u).add(v); // u와 v는 양방향 간선
             graph.get(v).add(u);
         }
+
         // System.out.println(graph);
     }
 }
