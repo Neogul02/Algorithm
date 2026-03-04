@@ -18,6 +18,9 @@ def solve():
     print(cnt)
             
 if __name__ == "__main__":
+    import sys
+    input = sys.stdin.readline
+    
     N = int(input())
     numbers = list(map(int, input().split()))
     X = int(input())  
