@@ -1,10 +1,11 @@
 def bfs():
-    queue = [];
-    queue.append(1); # 루트 노드 1부터 시작
+    from collections import deque
+
+    queue = deque([1]); # 루트 노드 1부터 시작
     visited[1] = True; # 루트 노드 방문 처리
     
-    while len(queue) > 0:
-        nodeIdx = queue.pop(0); # 큐에서 맨 앞 요소 꺼내기
+    while queue:
+        nodeIdx = queue.popleft(); # 큐에서 맨 앞 요소 꺼내기
         
         for next in graph[nodeIdx]: # 현재 노드와 연결된 노드들 탐색
             if visited[next] == True: continue; # 이미 방문한 노드면 건너뛰기
