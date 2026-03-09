@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
@@ -36,8 +35,6 @@ public class Main {
         // N! * (K!)^-1 * ((N-K)!)^-1
         long answer = factorial[N]; // N!
 
-        // 페르마의 소정리 => a^-1 mod p = a^(p-2) mod p (p는 소수) !!! 
-        // a^(p-2) 값이 커서 제곱을 2로 분할해서 계산하기
         answer = answer * pow(factorial[K], MODNUM - 2) % MODNUM; // K!^-1
         answer = answer * pow(factorial[N - K], MODNUM - 2) % MODNUM; // (N-K)!^-1
 
@@ -50,16 +47,14 @@ public class Main {
         long cur = base;
 
         while (exp > 0) {
-            if ((exp & 1)==1) { // exp가 홀수면
+            if (exp % 2 == 1) { // exp가 홀수면
                 result = (result * cur) % MODNUM; // result에 cur 곱하기
 
             }
             cur = (cur * cur) % MODNUM; // cur 제곱하기
             exp >>= 1; // exp를 오른쪽으로 한 비트 시프트 (2로 나누기)
-
+            
         }
         return result;
-
     }
-
 }
