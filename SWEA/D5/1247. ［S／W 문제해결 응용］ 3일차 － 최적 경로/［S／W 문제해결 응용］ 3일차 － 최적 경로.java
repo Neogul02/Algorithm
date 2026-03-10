@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
  * - |x1-x2| + |y1-y2|
  * 
  * - 고객의 수가 2<= N <= 10 이므로 10! => 완탐 조합해서 탈출하면 충분할듯
+ * 
  */
 public class Solution {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -63,7 +64,7 @@ public class Solution {
             isSelected = new boolean[N];
             minDistance = Integer.MAX_VALUE;
 
-            permutation(0);
+            permutation(0, 0);
 
             sb.append('#').append(tc).append(' ')
                 .append(minDistance).append('\n');
@@ -73,7 +74,11 @@ public class Solution {
         System.out.print(sb);
     }
 
-    public static void permutation(int depth) {
+    public static void permutation(int depth, int distance) {
+
+        // 현재 거리가 최소거리보다 크면 더 탐색할 필요없음
+        if (distance >= minDistance) return; // 가지치기
+        
         // 기저조건 => 노드의 갯수와 방문한 노드의 갯수가 같을 때
         if (depth == N) {
             int tempDistance = 0;
@@ -94,15 +99,23 @@ public class Solution {
             minDistance = Math.min(minDistance, tempDistance);
             return;
         }
-        
-        // 수행 로직 => 
+
+        // 수행 로직 => 방문하는 모든 경우의 수 구하기
         for (int i = 0; i < N; i++) {
             if (isSelected[i] == true) continue;
             
             isSelected[i] = true;
             visited[depth] = i;
 
-            permutation(depth + 1);
+            int nextDist;
+            if (depth == 0){
+                nextDist = manhattanDistance(companyX, companyY, customers[i][0], customers[i][1]);
+            } 
+            else{
+                nextDist = manhattanDistance(customers[visited[depth - 1]][0], customers[visited[depth - 1]][1],
+                        customers[i][0], customers[i][1]);
+            }
+            permutation(depth + 1, distance + nextDist);
 
             isSelected[i] = false; // 백트래킹
         }
