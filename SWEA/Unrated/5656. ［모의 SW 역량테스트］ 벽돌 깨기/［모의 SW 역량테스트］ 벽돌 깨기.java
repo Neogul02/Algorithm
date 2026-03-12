@@ -82,17 +82,23 @@ public class Solution {
     
     public static void simulate() {
         // 시뮬레이션용 맵 복사
-        int[][] tempMap = new int[H][W]; 
+        int[][] tempMap = new int[H][W];
         for (int i = 0; i < H; i++) {
             tempMap[i] = map[i].clone();
         }
         
         // 2-1. 구슬이 떨어지는 위치에서 가장 위에 있는 벽돌 찾아서 시작
         for (int pos : ballPos) {
-            int x = 0; // 벽돌 세로 위치
-            int y = pos - 1; // 벽돌 가로 위치 (1-based indexing이니까 -1)
 
-            // 가장 위에 있는 벽돌 찾기 (tempMap 사용!)
+            if (minBrickCnt == 0) {
+                // 이미 남은 벽돌이 없는 경우, 더 이상 시뮬레이션할 필요 없음
+                break;
+            }
+
+            int x = 0; // 세로
+            int y = pos - 1; // 가로
+
+            // 가장 위에 있는 벽돌 찾기
             while (x < H && tempMap[x][y] == 0) {
                 x++;
             }
@@ -164,9 +170,7 @@ public class Solution {
     }
     
     public static void fallDownBricks(int[][] copyMap) {
-        // 각 열을 검사하면서 빈칸이 있으면 그 위에 있는 벽돌을 아래로 떨어뜨리기??
-
-        // 맨 아래 열부터 검사하는게 효율적
+        // 맨 아래 열부터 검사
         for (int y = 0; y < W; y++) {
             for (int x = H - 1; x >= 0; x--) {
 
