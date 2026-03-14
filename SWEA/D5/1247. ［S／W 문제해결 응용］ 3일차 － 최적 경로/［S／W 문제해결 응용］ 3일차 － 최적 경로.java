@@ -35,6 +35,11 @@ public class Solution {
     }
     
     public static void dfs(int[] current, int depth, int distance) {
+        // 가지치기
+        if(distance >= minDistance) {
+            return;
+        }
+
         // 모든 고객을 방문한 경우
         if (depth == N) {
             // 집으로 돌아가는 거리 추가
@@ -45,7 +50,7 @@ public class Solution {
         
         // 아직 방문하지 않은 고객들을 모두 시도
         for (int i = 0; i < N; i++) {
-            
+
             if (visited[i] == false) {
                 visited[i] = true;
                 // 다음 고객으로 이동
@@ -56,6 +61,7 @@ public class Solution {
         }
     }
 
+    
     // 두 좌표 사이의 맨해튼 거리 계산
     public static int distance(int[] pos1, int[] pos2) {
         return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
