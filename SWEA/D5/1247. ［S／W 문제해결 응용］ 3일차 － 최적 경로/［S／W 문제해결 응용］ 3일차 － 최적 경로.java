@@ -9,85 +9,86 @@ public class Solution {
     static StringBuilder sb = new StringBuilder();
 
     static int N; // 고객의 수
+
     static int[] company;
     static int[] home;
-    static int[][] customers; // 고객 좌표
 
-    static boolean[] visited; // 방문 여부
+    static int[][] customers;
 
-    static int minDistance; // 최소 이동 거리
+    static boolean [] visited;
 
+    static int minDistance;
+
+    
     public static void main(String[] args) throws IOException {
         int T = Integer.parseInt(br.readLine().trim());
         for (int tc = 1; tc <= T; tc++) {
             input();
-            solve();
-            sb.append("#").append(tc).append(" ").append(minDistance).append("\n");
-        }
-        System.out.print(sb.toString());
-    }
-    
-    public static void solve() {
-        minDistance = Integer.MAX_VALUE;
-        visited = new boolean[N];
 
-        dfs(company, 0, 0); // 회사에서 출발
+            permutationDFS(0, company, 0);
+
+            sb.append('#').append(tc).append(' ')
+                    .append(minDistance).append('\n');
+            
+        }
+        System.out.print(sb);
+
     }
     
-    public static void dfs(int[] current, int depth, int distance) {
+    public static void permutationDFS(int depth, int[] current , int distance) {
         // 가지치기
-        if(distance >= minDistance) {
-            return;
-        }
+        if(distance > minDistance) return;
 
-        // 모든 고객을 방문한 경우
+        // 기저조건 depth가 N 이 되면 종료하고 최소값 갱신
         if (depth == N) {
-            // 집으로 돌아가는 거리 추가
-            int totalDistance = distance + distance(current, home);
-            minDistance = Math.min(minDistance, totalDistance);
+            int tempDistance = distance + manhattan(current[0], current[1], home[0], home[1]);
+            minDistance = Math.min(minDistance, tempDistance);
             return;
         }
-        
-        // 아직 방문하지 않은 고객들을 모두 시도
-        for (int i = 0; i < N; i++) {
 
-            if (visited[i] == false) {
-                visited[i] = true;
-                // 다음 고객으로 이동
-                int newDistance = distance + distance(current, customers[i]);
-                dfs(customers[i], depth + 1, newDistance);
-                visited[i] = false; // Backtracking
-            }
+        // 수행 로직
+        for (int i = 0; i < N; i++) {
+            if (visited[i] == true)
+                continue;
+
+            visited[i] = true;
+
+            int newDistance = distance + manhattan(current[0], current[1], customers[i][0], customers[i][1]);
+            permutationDFS(depth + 1, customers[i], newDistance);
+            
+            visited[i] = false; // backTracking    
         }
     }
-
     
-    // 두 좌표 사이의 맨해튼 거리 계산
-    public static int distance(int[] pos1, int[] pos2) {
-        return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
+    // 두 점간의 거리 구하기, 맨해튼 거리
+    public static int manhattan(int x1, int y1, int x2, int y2) {
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
-
+    
     public static void input() throws IOException {
-        // Line 1: 고객의 수 N
+        // Line 1: people count
         N = Integer.parseInt(br.readLine().trim());
 
-        // Line 2: 회사 좌표, 집 좌표 + N명의 고객 좌표
-        st = new StringTokenizer(br.readLine().trim());
+        // Line 2: companyX, companyY, homeX, homeY, + N x
+        st = new StringTokenizer(br.readLine().trim(), " ");
         company = new int[2];
+        home = new int[2];
+
         company[0] = Integer.parseInt(st.nextToken());
         company[1] = Integer.parseInt(st.nextToken());
-
-        home = new int[2];
         home[0] = Integer.parseInt(st.nextToken());
         home[1] = Integer.parseInt(st.nextToken());
 
+        // 고객수 만큼의 x, y 좌표
         customers = new int[N][2];
         for (int i = 0; i < N; i++) {
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-
-            customers[i][0] = x;
-            customers[i][1] = y;
+            customers[i][0] = Integer.parseInt(st.nextToken());
+            customers[i][1] = Integer.parseInt(st.nextToken());
         }
+
+        // Init
+        minDistance = Integer.MAX_VALUE;
+        visited = new boolean[N];
+
     }
 }
