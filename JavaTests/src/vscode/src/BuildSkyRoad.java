@@ -6,12 +6,25 @@ import java.util.StringTokenizer;
 /**
  * 4014. 활주로 건설
  * @author neogul02
- * 
- * 
  * - 활주로는 동일한 높이의 구간에서 건설이 가능함
  * - 가로랑 세로방향을 각각 체크하는게 좋을듯함
  * - 활주로는 경사로가 필요할 때, 경사로를 설치할 수 있는지 체크해야함
  * - 경사로의 높이는 1로 고정, X는 2이상 4이하
+ * 
+ * 1. 가로행 체크
+ *  1-1. 높이 차이가 0이면 같은 높이니까 skip
+ *  1-2. 높이 차이가 2이상이면 불가
+ *  1-3. 높이 차이가 1이면 경사로 설치 가능 여부 체크
+ *   1-3.1. 현재 위치에서 뒤로 X칸 체크
+ *   1-3.2. 범위 벗어나거나, 높이가 다르거나, 이미 경사로 설치된 곳이면 불가
+ *   1-3.3. 경사로 설치 가능하면 used 배열에 표시
+ *  1-4. 높이 차이가 -1이면 경사로 설치 가능 여부 체크
+ *   1-4.1. 현재 위치에서 앞으로 X칸 체크
+ *   1-4.2. 범위 벗어나거나, 높이가 다르거나, 이미 경사로 설치된 곳이면 불가
+ *   1-4.3. 경사로 설치 가능하면 used 배열에 표시
+ * 2. 세로행 체크
+ *  2-1. 가로행 체크와 동일한 로직으로 체크
+ * 3. 활주로 건설 가능하면 answer++
  */
 public class BuildSkyRoad {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -52,44 +65,14 @@ public class BuildSkyRoad {
 
     public static void checkRow() {
         for (int i = 0; i < N; i++) {
-            int count = 1; // 동일한 높이의 구간의 길이
-            boolean canBuild = true; // 활주로 건설 가능 여부
+            int[] line = new int[N];
 
-            for (int j = 1; j < N; j++) {
-                if (map[i][j] == map[i][j - 1]) {
-                    count++;
-                    // 높이가 1 증가하는 경우
-                } else if (map[i][j] == map[i][j - 1] + 1) {
-                    // 경사로 설치 가능
-                    if (count >= X) {
-                        count = 1; // 새로운 구간 시작
-                    } else {
-                        canBuild = false;
-                        break;
-                    }
-                    // 높이가 1 감소하는 경우
-                } else if (map[i][j] == map[i][j - 1] - 1) {
-                    int tempCount = 0;
-
-                    for (int k = j; k < N; k++) {
-                        if (map[i][k] == map[i][j]) { // 같은 높이가 계속되는지
-                            tempCount++;
-                        }
-                    }
-                    if (tempCount >= X) { // 경사로 설치 가능
-                        count = 0; // 새로운 구간 시작
-                        j += tempCount - 1; // 경사로 설치한 만큼 인덱스 이동
-                    } else {
-                        canBuild = false;
-                        break;
-                    }
-                } else { // 높이가 2 이상 차이
-                    canBuild = false;
-                    break;
-                }
+            // 가로 행 한 줄 복사
+            for (int j = 0; j < N; j++) {
+                line[j] = map[i][j];
             }
 
-            if (canBuild) {
+            if (canBuild(line)) {
                 answer++;
             }
         }
@@ -97,47 +80,55 @@ public class BuildSkyRoad {
     
     public static void checkCol() {
         for (int j = 0; j < N; j++) {
-            int count = 1; // 동일한 높이의 구간의 길이
-            boolean canBuild = true; // 활주로 건설 가능 여부
+            int[] line = new int[N];
 
-            for (int i = 1; i < N; i++) {
-                if (map[i][j] == map[i - 1][j]) {
-                    count++;
-                    // 높이가 1 증가하는 경우
-                } else if (map[i][j] == map[i - 1][j] + 1) {
-                    // 경사로 설치 가능
-                    if (count >= X) {
-                        count = 1; // 새로운 구간 시작
-                    } else {
-                        canBuild = false;
-                        break;
-                    }
-                    // 높이가 1 감소하는 경우
-                } else if (map[i][j] == map[i - 1][j] - 1) {
-                    int tempCount = 0;
-
-                    for (int k = i; k < N; k++) {
-                        if (map[k][j] == map[i][j]) { // 같은 높이가 계속되는지
-                            tempCount++;
-                        }
-                    }
-                    if (tempCount >= X) { // 경사로 설치 가능
-                        count = 0; // 새로운 구간 시작
-                        i += tempCount - 1; // 경사로 설치한 만큼 인덱스 이동
-                    } else {
-                        canBuild = false;
-                        break;
-                    }
-                } else { // 높이가 2 이상 차이
-                    canBuild = false;
-                    break;
-                }
+            // 세로 열 한 줄 복사
+            for (int i = 0; i < N; i++) {
+                line[i] = map[i][j];
             }
 
-            if (canBuild) {
+            if (canBuild(line)) {
                 answer++;
             }
         }
+    }
+
+    public static boolean canBuild(int[] line) {
+        boolean[] used = new boolean[N];
+
+        for (int i = 0; i < N - 1; i++) {
+            int diff = line[i + 1] - line[i];
+
+            // 높이 차이가 0이면 같은 높이니까 skip
+            if (diff == 0) {
+                continue;
+            }
+
+            // 2이상 높이차면 불가
+            if (Math.abs(diff) > 1) {
+                return false;
+            }
+
+            // 높이 차이가 1이면 경사로 설치 가능 여부 체크
+            if (diff == 1) {
+                for (int j = i; j > i - X; j--) {
+
+                    if (j < 0 || line[j] != line[i] || used[j]==true) {
+                        return false;
+                    }
+                    used[j] = true;
+                }
+            } else { // 높이 차이가 -1
+                for (int j = i + 1; j <= i + X; j++) {
+                    if (j >= N || line[j] != line[i + 1] || used[j]==true) {
+                        return false;
+                    }
+                    used[j] = true;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static void input() throws IOException {
@@ -145,7 +136,7 @@ public class BuildSkyRoad {
         N = Integer.parseInt(st.nextToken());
         X = Integer.parseInt(st.nextToken());
 
-        map = new int[N+1][N+1];
+        map = new int[N][N];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine().trim(), " ");
             for (int j = 0; j < N; j++) {

@@ -1,0 +1,35 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "language_info": {
+      "name": "java"
+    }
+  },
+  "cells": [
+    {
+      "id": "f1838582-5240-4e50-ba36-ae378a499078",
+      "cell_type": "code",
+      "source": "",
+      "metadata": {
+        "language": "java",
+        "id": "f1838582-5240-4e50-ba36-ae378a499078",
+        "executionSummary": {
+          "executionOrder": 1,
+          "success": false
+        }
+      },
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "unclosed character literal\nprint('혜준바보')\n      ^\n"
+          },
+          "metadata": {},
+          "execution_count": 1
+        }
+      ]
+    }
+  ]
+}
