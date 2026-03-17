@@ -11,43 +11,28 @@ class Main{
     static int N, S;
 
     static int[] intArr;
-    static boolean[] isSelected;
 
     static int result;
     public static void main(String[]args) throws IOException {
         input();
-        subset(0); 
+        subset(0, 0, 0); 
 
         System.out.print(result);
     }
 
-    public static void subset(int depth){
-        // 기저 조건
-        if(depth == N){
-            int tempSum = 0;
-            int trueCnt = 0;
-            for(int i=0; i<N; i++){
-                if(isSelected[i] == true){
-                    trueCnt ++;
-                    tempSum += intArr[i];
-                    
-                }
-            }
-            if(trueCnt==0) return;
-            
-            if(tempSum == S){
-                result ++;
-            }
+    public static void subset(int depth, int currentSum, int count){
+        // 기저조건
 
+        if(depth == N){
+            if(currentSum == S && count>0) result++;
             return;
         }
 
-        // 수행 로직
-        isSelected[depth] = true;
-        subset(depth+1);
+       // 수행로직
+       subset(depth+1, currentSum+intArr[depth], count+1); // 선택하는 경우 (덧셈해서 넘기기)
 
-        isSelected[depth] = false;
-        subset(depth+1);
+       subset(depth+1, currentSum, count); // 선택 안하는경우 (덧셈 안함)
+
     }
 
     public static void input() throws IOException{
@@ -55,7 +40,7 @@ class Main{
         N = Integer.parseInt(st.nextToken());
         S = Integer.parseInt(st.nextToken());
         intArr = new int[N];
-        isSelected = new boolean[N];
+        // isSelected = new boolean[N];
 
         st = new StringTokenizer(br.readLine().trim(), " ");
         for(int i=0; i<N; i++){
