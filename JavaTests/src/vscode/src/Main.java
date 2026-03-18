@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -61,5 +62,19 @@ class Main {
             return true;
 
         return false;
+=======
+class Main{
+    public static void main(String[] args) {
+        double a = 0.1;
+        double b = 0.2;
+        double c = 0.3;
+        // 0.1 + 0.2는 0.3과 정확히 같지 않기 때문에 false가 출력됩니다.
+        System.out.println(a + b == c);
+
+
+        String user_str = "hello";
+        
+        System.out.println(user_str.toUpperCase());
+>>>>>>> Stashed changes
     }
 }
