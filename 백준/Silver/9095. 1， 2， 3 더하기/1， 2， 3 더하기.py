@@ -1,11 +1,8 @@
-import sys
-input = sys.stdin.readline
+tc = int(input())
+dp = [0,1,2,4]
 
-def func(x):
-    if x <= 3:
-        return [0, 1, 2, 4][x]
-    return func(x - 1) + func(x - 2) + func(x - 3)
+for i in range(4,11):
+    dp.append(dp[i-1]+dp[i-2]+dp[i-3])
 
-t = int(input())
-for _ in range(t):
-    print(func(int(input())))
+for _ in range(tc):
+    print(dp[int(input())])
