@@ -1,10 +1,18 @@
+import sys
+input = sys.stdin.readline
 
-# N^2번의 연산, 1초에 10^8번 수행 가능
-# N^2 <= 10^8 이면 Accepted
 N = int(input())
 
-if N * N <= 10**8:
-    print('Accepted')
-else:
-    print('Time limit exceeded')
+stairs = [0]*301
+stairs = [int(input()) for i in range(N)]
 
+dp = [0]*301
+
+dp[0] = stairs[0]
+dp[1] = stairs[0] + stairs[1]
+dp[2] = max(stairs[0] + stairs[2], stairs[1] + stairs[2])
+
+for i in range(3, N):
+    dp[i] = max(dp[i-2]+stairs[i], dp[i-3]+stairs[i-1]+stairs[i])
+
+print(dp[N-1])
