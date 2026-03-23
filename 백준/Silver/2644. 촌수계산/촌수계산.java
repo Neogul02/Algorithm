@@ -1,7 +1,7 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -18,38 +18,36 @@ class Main {
 
     static boolean[] visited;
 
+    static int ans;
+
     static ArrayList<ArrayList<Integer>> graph;
 
     public static void main(String[] args) throws IOException{
 
         input();
 
-        System.out.print(bfs());
+        ans = -1;
+
+        dfs(0, peopleA);
+
+        System.out.print(ans);
 
     }
 
-    public static int bfs(){
-        ArrayDeque<Integer> queue = new ArrayDeque<>();
-        int[] dist = new int[N + 1];
-
-        queue.add(peopleA);
-        visited[peopleA] = true;
-
-        while(queue.isEmpty()!=true){
-            int temp = queue.poll();
-
-            if(temp == peopleB) return dist[temp];
-
-            for(int next : graph.get(temp)){
-         
-                if(visited[next]==true) continue;
-
-                dist[next] = dist[temp] + 1;
-                visited[next] = true;
-                queue.add(next);   
-            }
+    public static void dfs(int depth, int temp){
+        if(temp == peopleB){
+            ans = depth;
+            return;
         }
-        return -1;
+
+        visited[temp] = true;
+
+        for(int next: graph.get(temp)){
+            if(visited[next] == true) continue;
+
+            dfs(depth+1, next);
+        }
+        
     }
 
     public static void input() throws IOException{
