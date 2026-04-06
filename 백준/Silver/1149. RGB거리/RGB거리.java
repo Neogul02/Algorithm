@@ -3,57 +3,58 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+/**
+ * 1149. RGB 거리
+ * @author neogul02
+ * 
+ * 1. 집의 수 N이 주어진다.
+ * 2. N개의 줄에 빨강 초록 파랑 순서대로 비용이 주어진다.
+ * 3. N번 집은 N-1번 집의 색과 같지 않아야 함
+ */
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
+    
     static int N;
-
     static int[][] dp;
-    static int[] R, G, B;
+    static int[][] cost;
 
     public static void main(String[] args) throws IOException{
         input();
         solve();
+
+        System.out.print(Math.min(dp[N-1][0],Math.min(dp[N-1][1],dp[N-1][2])));
     }
-
+    
     public static void solve(){
+        dp = new int[N][3];
 
-        // Init.
-        dp[1][0] = R[1];
-        dp[1][1] = G[1];
-        dp[1][2] = B[1];
+        // 초기 값 세팅
+        dp[0][0] = cost[0][0];
+        dp[0][1] = cost[0][1];  
+        dp[0][2] = cost[0][2];
 
-        // Logic.
-        for(int i=2; i<N+1; i++){  
-            // 레드 옆집은 그린이거나 블루여야함
-            dp[i][0] = Math.min(dp[i-1][1], dp[i-1][2])+R[i];
-            
-            // 그린 옆집은 레드이거나 블루여야함
-            dp[i][1] = Math.min(dp[i-1][0], dp[i-1][2])+G[i];
-            
-            // 블루 옆집은 레드이거나 그린이여야함
-            dp[i][2] = Math.min(dp[i-1][0], dp[i-1][1])+B[i];
+        // i번째집 = i번째 비용 + 이전 집 색깔 2개 중 최솟값
+        for(int i=1; i<N; i++){
+            dp[i][0] = cost[i][0] + Math.min(dp[i-1][1], dp[i-1][2]);
+            dp[i][1] = cost[i][1] + Math.min(dp[i-1][0], dp[i-1][2]);
+            dp[i][2] = cost[i][2] + Math.min(dp[i-1][0], dp[i-1][1]);
         }
 
-        int result = Integer.MAX_VALUE;
-        result = Math.min(dp[N][0], Math.min(dp[N][1],dp[N][2]));
-        System.out.print(result);
     }
 
     public static void input() throws IOException{
         N = Integer.parseInt(br.readLine().trim());
 
-        R = new int[N+1];
-        G = new int[N+1];
-        B = new int[N+1];
-
-        dp = new int[N+1][3];
-
-        for(int i=1; i<N+1; i++){
+        // ㅁㅁㅁ
+        // ㅁㅁㅁ
+        cost = new int[N][3]; // 집을 색칠하는 비용
+        
+        for(int i=0; i<N; i++){
             st = new StringTokenizer(br.readLine().trim());
-            R[i] = Integer.parseInt(st.nextToken());
-            G[i] = Integer.parseInt(st.nextToken());
-            B[i] = Integer.parseInt(st.nextToken());
+            cost[i][0] = Integer.parseInt(st.nextToken()); // R로 색칠하는 비용
+            cost[i][1] = Integer.parseInt(st.nextToken()); // G로 색칠하는 비용
+            cost[i][2] = Integer.parseInt(st.nextToken()); // B로 색칠하는 비용
         }
     }
 }
