@@ -36,8 +36,7 @@ class Solution{
     // r=0, c=0 부터 중심으로 잡고 영역의 크기를 1부터 N+1까지 늘려가면서 탐색
     for(int r=0; r<N; r++){
       for(int c=0; c<N; c++){
-        int tempHomeCnt = 0; // 현재 영역에 잡히는 집의 수
-
+      
         int[] dists = new int[totalHomes]; // 중심점에서 각 집까지의 거리 저장
 
         for(int i=0; i<totalHomes; i++){
@@ -47,10 +46,17 @@ class Solution{
         Arrays.sort(dists); // 거리를 오름차순으로 정렬
 
         for(int k=1; k<=N+1; k++){
+          int tempHomeCnt = 0; // 현재 영역에 잡히는 집의 수
+
           // 영역의 크기가 k일 때, 잡히는 집의 수는 거리 배열에서 k-1 이하인 집의 수
-          while(tempHomeCnt < totalHomes && dists[tempHomeCnt] < k){
-            tempHomeCnt++;
+          for(int dist : dists){
+            if(dist < k) tempHomeCnt++;
+            else break; // 거리가 k 이상인 집은 더 이상 잡히지 않으므로 반복 종료
           }
+
+          if(tempHomeCnt == 0) continue; // 잡히는 집이 없는 경우 가지치기
+          if(tempHomeCnt < maxHome) continue; // 이미 최대 집의 수보다 작은 경우 가지치기
+        
 
           int cost = k*k + (k-1)*(k-1); // 운영비용
           int pay = tempHomeCnt * M; // 집에서 받는 돈
