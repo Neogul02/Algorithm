@@ -1,11 +1,11 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
- * 1952. 수영장
+ * 1952. 수영장 [DP로 풀기]
  * @author neogul02
  * 
  * 1년동안 수영장을 가장 싸게 이용할 수 있는 가격을 출력하기
@@ -19,71 +19,71 @@ import java.util.StringTokenizer;
  * 5. 1달권과 3달권을 섞는 경우 
  * 6. 1일권 1달권 3달권 다 섞는경우
  * 7. 1년권으로 퉁치는 경우
- *  
+ * 
+ * 가장 적게 지출하는 비용을 구하기
+ * DP로 풀이하려면? -> dp[i] : i월까지 이용하는데 드는 최소 비용
+ * 1. dp[i] = dp[i-1] + plan[i-1]
+ * 2. dp[i] = dp[i-1] + price[1]
+ * 3. dp[i] = dp[i-3] + price[2]
+ * 4. dp[i] = price[3]
+ * result = dp[12]과 price[3] 중 작은 값
  */
 public class Solution {
-	
-	static int[] prices;
-	static int[] plan;
-	
-	static int minCost; // 최소 비용
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		
-		int T = Integer.parseInt(br.readLine().trim());
-		
-		for(int tc=1; tc<=T; tc++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-            prices = new int[4];
-            for (int i = 0; i < 4; i++) {
-                prices[i] = Integer.parseInt(st.nextToken());
-            }
-            
-            // 12개월 이용 계획 입력
-            st = new StringTokenizer(br.readLine());
-            plan = new int[13];  // 1~12월 (0번 인덱스 안 씀)
-            for (int i = 1; i <= 12; i++) {
-                plan[i] = Integer.parseInt(st.nextToken());
-            }
-         
-            minCost = prices[3];  // 1년권 가격으로 시작
-            
-//            System.out.println(Arrays.toString(prices));
-//            System.out.println(Arrays.toString(plan));
-            // DFS 시작 (1월부터, 비용 0)
-            dfs(1, 0);
-            
-            sb.append("#").append(tc).append(" ").append(minCost).append("\n");
-		}
-		System.out.print(sb);
-	}
+  static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+  static StringBuilder sb = new StringBuilder();
+  static StringTokenizer st;
 
-	private static void dfs(int month, int cost) {
-		// 기저조건
-		if(month > 12) {
-			minCost = Math.min(minCost, cost);
-			return;
-		}
-		
-		// 가지치기: 이미 최소값보다 크면 return
-        if (cost >= minCost) {
-            return;
-        }
-        
-        if(plan[month] == 0) {
-        	dfs(month+1,cost);
-        	return;
-        }
-        
-        int dailyCost = plan[month] * prices[0];  // 1일권으로 계산
-        int monthlyCost = prices[1];               // 1달권
-        int betterCost = Math.min(dailyCost, monthlyCost);
-        
-        dfs(month + 1, cost + betterCost);
-        
-        // 선택 2: 3달권 사용 (3개월 건너뛰기)
-        dfs(month + 3, cost + prices[2]);
-	}
+  static int[] price; // 1일, 1달, 3달, 1년 이용권 가격
+  static int[] plan; // 1월부터 12월까지 이용 계획
+  static int result;
+
+  public static void main(String[] args) throws IOException{
+    int T = Integer.parseInt(br.readLine().trim());
+    for(int tc=1; tc<=T; tc++){
+      input();
+      solve();
+      sb.append("#").append(tc).append(" ").append(result).append("\n");
+    }
+    System.out.print(sb);
+  }
+
+  public static void solve(){
+    // dp[i] : i월까지 이용하는데 드는 최소 비용
+    int[] dp = new int[13];
+
+    for(int i=1; i<=12; i++){
+      // 1일권으로만 이용하는 경우
+      dp[i] = dp[i-1] + plan[i-1] * price[0];
+
+      // 1달권으로 이용하는 경우
+      dp[i] = Math.min(dp[i], dp[i-1] + price[1]);
+
+      // 3달권으로 이용하는 경우 (i가 3이상일 때만 계산)
+      if(i >= 3){
+        dp[i] = Math.min(dp[i], dp[i-3] + price[2]);
+      } else {
+        dp[i] = Math.min(dp[i], price[2]);
+      }
+    }
+
+    // 1년권으로 퉁치는 경우
+    result = Math.min(dp[12], price[3]);
+  }
+
+  public static void input() throws IOException{
+    // 이용권 가격 입력
+    price = new int[4];
+    st = new StringTokenizer(br.readLine().trim());
+    for(int i=0; i<4; i++){
+      price[i] = Integer.parseInt(st.nextToken());
+    }
+
+    // 이용 계획 입력
+    plan = new int[12];
+    st = new StringTokenizer(br.readLine().trim());
+    for(int i=0; i<12; i++){
+      plan[i] = Integer.parseInt(st.nextToken());
+    }
+  }
+  
 }
